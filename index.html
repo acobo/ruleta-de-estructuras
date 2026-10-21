@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruleta de Estructuras - Think Faster, Talk Smarter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Outfit:wght@300;400;600;700;800;900&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0612;
+      --bg-cabinet: #150d24;
+      --gold-1: #ffe082;
+      --gold-2: #ffb300;
+      --gold-3: #ff8f00;
+      --gold-dark: #7a4600;
+      --gold-border: linear-gradient(135deg, #ffe082 0%, #ffb300 35%, #7a4600 70%, #ffca28 100%);
+      --chrome-border: linear-gradient(135deg, #ffffff 0%, #cfd8dc 30%, #78909c 70%, #eceff1 100%);
+      --neon-cyan: #00e5ff;
+      --neon-magenta: #ff007f;
+      --neon-amber: #ffab00;
+      --neon-green: #00e676;
+      --red-btn-1: #ff3366;
+      --red-btn-2: #c2185b;
+      --red-btn-shadow: #7a0933;
+      --text-main: #f5f5f7;
+      --text-muted: #9e9ebb;
+      --card-bg: rgba(22, 16, 38, 0.95);
+      --reel-bg: #0f0a1c;
+      --reel-h: 230px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 20%, #281545 0%, #120a21 50%, var(--bg-dark) 100%);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 1.5rem 1rem 3rem 1rem;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient casino particle background */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(1.5px 1.5px at 20% 30%, rgba(255, 215, 0, 0.25), transparent),
+        radial-gradient(1.5px 1.5px at 80% 40%, rgba(0, 229, 255, 0.2), transparent),
+        radial-gradient(2px 2px at 40% 80%, rgba(255, 0, 127, 0.2), transparent),
+        radial-gradient(1.5px 1.5px at 70% 85%, rgba(255, 215, 0, 0.2), transparent);
+      background-size: 250px 250px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    /* Header & Controls bar */
+    .top-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 0.5rem;
+    }
+
+    .badge-subtle {
+      font-family: 'Chakra Petch', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--gold-2);
+      text-transform: uppercase;
+      background: rgba(255, 179, 0, 0.12);
+      border: 1px solid rgba(255, 179, 0, 0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-subtle .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold-2);
+      box-shadow: 0 0 8px var(--gold-2);
+      animation: pulse 1.5s infinite;
+    }
+
+    .sound-toggle-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .sound-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+    }
+
+    /* Slot Machine Cabinet */
+    .cabinet-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cabinet {
+      width: 100%;
+      max-width: 980px;
+      background: linear-gradient(180deg, #24143a 0%, #170d27 40%, #10081c 100%);
+      border-radius: 28px;
+      padding: 24px 28px 32px 28px;
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.85),
+        0 0 0 4px #3a225c,
+        0 0 0 8px #180d2b,
+        0 0 45px rgba(255, 0, 127, 0.2),
+        inset 0 2px 3px rgba(255, 255, 255, 0.25),
+        inset 0 -4px 10px rgba(0, 0, 0, 0.8);
+      border: 2px solid rgba(255, 215, 0, 0.35);
+      position: relative;
+      overflow: visible;
+    }
+
+    /* Marquee Top */
+    .marquee {
+      background: linear-gradient(180deg, #32184d 0%, #1a0b2c 100%);
+      border-radius: 18px;
+      padding: 18px 20px 14px 20px;
+      border: 3px solid #ffb300;
+      box-shadow: 
+        0 0 25px rgba(255, 179, 0, 0.4),
+        inset 0 0 15px rgba(255, 179, 0, 0.3);
+      position: relative;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Marquee perimeter chase lights */
+    .chase-lights {
+      position: absolute;
+      inset: -6px;
+      border-radius: 24px;
+      pointer-events: none;
+      background: radial-gradient(circle, #ffeb3b 35%, transparent 40%) 0 0 / 22px 22px repeat;
+      mask: linear-gradient(#fff, #fff) content-box, linear-gradient(#fff, #fff);
+      mask-composite: exclude;
+      -webkit-mask-composite: destination-out;
+      padding: 6px;
+      opacity: 0.9;
+      animation: lightsChase 1.2s linear infinite;
+    }
+
+    @keyframes lightsChase {
+      0% { filter: hue-rotate(0deg) drop-shadow(0 0 3px #ffd700); }
+      50% { filter: hue-rotate(30deg) drop-shadow(0 0 6px #ff9100); }
+      100% { filter: hue-rotate(0deg) drop-shadow(0 0 3px #ffd700); }
+    }
+
+    .marquee-title {
+      font-size: 2.1rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      background: linear-gradient(180deg, #ffffff 0%, #ffe082 45%, #ffb300 70%, #ff8f00 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(255, 179, 0, 0.6);
+      text-align: center;
+      line-height: 1.1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .marquee-title .star {
+      color: #ffd700;
+      font-size: 1.4rem;
+      filter: drop-shadow(0 0 8px #ffd700);
+      -webkit-text-fill-color: #ffd700;
+    }
+
+    .marquee-subtitle {
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      color: var(--neon-cyan);
+      text-transform: uppercase;
+      margin-top: 4px;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+    }
+
+    /* Status & Credit HUD */
+    .hud-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 6, 18, 0.85);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: 12px;
+      padding: 10px 18px;
+      margin-bottom: 20px;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hud-message-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .led-screen {
+      font-family: 'Chakra Petch', monospace;
+      font-size: 0.95rem;
+      color: var(--neon-green);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 8px rgba(0, 230, 118, 0.6);
+    }
+
+    .spins-counter-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .spins-label {
+      font-size: 0.8rem;
+      color: var(--gold-1);
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .tokens-display {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .token-coin {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff3b0 0%, #ffb300 50%, #945700 100%);
+      border: 2px solid #ffe082;
+      box-shadow: 0 0 12px rgba(255, 179, 0, 0.8), inset 0 1px 2px #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 0.75rem;
+      color: #4a2800;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    .token-coin.spent {
+      background: radial-gradient(circle at 35% 35%, #423b4f 0%, #221c2e 60%, #15111f 100%);
+      border-color: #554869;
+      box-shadow: none;
+      color: #6a617d;
+      opacity: 0.4;
+      transform: scale(0.85);
+    }
+
+    .token-coin::after {
+      content: "★";
+      font-size: 13px;
+    }
+
+    /* Reels Frame Container */
+    .reels-stage {
+      position: relative;
+      background: #08040f;
+      border-radius: 18px;
+      padding: 14px;
+      border: 4px solid #3d2360;
+      box-shadow: 
+        inset 0 0 35px rgba(0, 0, 0, 0.95),
+        0 0 0 2px #ffb300,
+        0 8px 25px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Center Payline Indicator */
+    .payline-marker {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 4px;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .payline-line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, 
+        rgba(255, 0, 127, 0.8) 0%, 
+        rgba(255, 215, 0, 0.6) 20%, 
+        rgba(255, 215, 0, 0.2) 50%, 
+        rgba(255, 215, 0, 0.6) 80%, 
+        rgba(255, 0, 127, 0.8) 100%);
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+    }
+
+    .payline-arrow {
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      filter: drop-shadow(0 0 6px #ff007f);
+    }
+
+    .payline-arrow.left {
+      border-left: 14px solid #ff007f;
+      margin-left: 2px;
+    }
+
+    .payline-arrow.right {
+      border-right: 14px solid #ff007f;
+      margin-right: 2px;
+    }
+
+    /* Reels Grid */
+    .reels-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      position: relative;
+    }
+
+    /* Individual Reel Column */
+    .reel-column {
+      background: var(--reel-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 
+        inset 0 10px 15px -5px rgba(0, 0, 0, 0.9),
+        inset 0 -10px 15px -5px rgba(0, 0, 0, 0.9),
+        0 4px 12px rgba(0, 0, 0, 0.5);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .reel-header {
+      padding: 8px 10px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      z-index: 5;
+    }
+
+    .reel-col-tema .reel-header {
+      background: linear-gradient(180deg, rgba(0, 229, 255, 0.25) 0%, rgba(0, 229, 255, 0.08) 100%);
+      color: var(--neon-cyan);
+      border-bottom-color: rgba(0, 229, 255, 0.3);
+    }
+
+    .reel-col-audiencia .reel-header {
+      background: linear-gradient(180deg, rgba(255, 0, 127, 0.25) 0%, rgba(255, 0, 127, 0.08) 100%);
+      color: var(--neon-magenta);
+      border-bottom-color: rgba(255, 0, 127, 0.3);
+    }
+
+    .reel-col-estructura .reel-header {
+      background: linear-gradient(180deg, rgba(255, 179, 0, 0.25) 0%, rgba(255, 179, 0, 0.08) 100%);
+      color: var(--gold-1);
+      border-bottom-color: rgba(255, 179, 0, 0.3);
+    }
+
+    /* Drum Window with Cylindrical Lighting Overlay */
+    .reel-window {
+      height: var(--reel-h);
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 50%, #201538 0%, #120921 70%, #0a0414 100%);
+    }
+
+    /* 3D Curved cylinder shadows overlay */
+    .reel-window::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, 
+        rgba(0, 0, 0, 0.85) 0%, 
+        rgba(0, 0, 0, 0.3) 25%, 
+        rgba(0, 0, 0, 0) 45%, 
+        rgba(0, 0, 0, 0) 55%, 
+        rgba(0, 0, 0, 0.3) 75%, 
+        rgba(0, 0, 0, 0.85) 100%);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    /* Glass reflection sheen */
+    .reel-window::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0) 100%);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* The moving track */
+    .reel-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      will-change: transform;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .reel-item {
+      height: var(--reel-h);
+      min-height: var(--reel-h);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 16px 14px;
+      text-align: center;
+      user-select: none;
+      position: relative;
+    }
+
+    .reel-item-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .item-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .item-main-text {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.35;
+      color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .item-sub-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .item-flow {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .flow-step {
+      font-size: 0.7rem;
+      background: rgba(255, 179, 0, 0.15);
+      border: 1px solid rgba(255, 179, 0, 0.3);
+      color: var(--gold-1);
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+
+    /* Motion blur effect during active spin */
+    .spinning-blur {
+      filter: blur(3.5px);
+      opacity: 0.85;
+    }
+
+    /* Controls & Big Spin Button */
+    .controls-panel {
+      margin-top: 26px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .spin-action-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      position: relative;
+    }
+
+    /* 3D Arcade Push Button */
+    .arcade-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 48px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #ffffff;
+      text-shadow: 0 -2px 0 rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.6);
+      background: radial-gradient(ellipse at 50% 30%, #ff5277 0%, #d81b60 60%, #880e4f 100%);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 
+        0 10px 0 var(--red-btn-shadow),
+        0 14px 25px rgba(255, 0, 100, 0.5),
+        inset 0 2px 3px rgba(255, 255, 255, 0.5),
+        inset 0 -3px 5px rgba(0, 0, 0, 0.4);
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+    }
+
+    .arcade-btn:hover:not(:disabled) {
+      filter: brightness(1.12);
+      transform: translateY(-2px);
+      box-shadow: 
+        0 12px 0 var(--red-btn-shadow),
+        0 18px 30px rgba(255, 0, 100, 0.65),
+        inset 0 2px 3px rgba(255, 255, 255, 0.6);
+    }
+
+    .arcade-btn:active:not(:disabled),
+    .arcade-btn.is-pressed {
+      transform: translateY(8px);
+      box-shadow: 
+        0 2px 0 var(--red-btn-shadow),
+        0 4px 10px rgba(255, 0, 100, 0.35),
+        inset 0 2px 3px rgba(0, 0, 0, 0.4);
+    }
+
+    .arcade-btn:disabled {
+      background: radial-gradient(ellipse at 50% 30%, #575263 0%, #3a3644 60%, #201e26 100%);
+      color: #8c8699;
+      box-shadow: 0 4px 0 #18161f;
+      cursor: not-allowed;
+      filter: grayscale(0.5);
+      text-shadow: none;
+      transform: translateY(6px);
+    }
+
+    .arcade-btn .btn-icon {
+      font-size: 1.4rem;
+      animation: spinIcon 3s infinite linear;
+    }
+
+    .arcade-btn:disabled .btn-icon {
+      animation: none;
+      opacity: 0.5;
+    }
+
+    @keyframes spinIcon {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Mechanical Side Lever */
+    .lever-assembly {
+      position: absolute;
+      right: -52px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      z-index: 15;
+    }
+
+    .lever-base {
+      width: 36px;
+      height: 44px;
+      background: linear-gradient(180deg, #90a4ae 0%, #37474f 100%);
+      border-radius: 8px 16px 16px 8px;
+      border: 2px solid #b0bec5;
+      box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.7);
+      position: absolute;
+      bottom: 40px;
+      right: 0;
+    }
+
+    .lever-stem {
+      width: 12px;
+      height: 110px;
+      background: linear-gradient(90deg, #cfd8dc 0%, #ffffff 40%, #78909c 100%);
+      border-radius: 6px;
+      position: absolute;
+      bottom: 60px;
+      right: 12px;
+      transform-origin: bottom center;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .lever-knob {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ff5252 0%, #d50000 65%, #5d0000 100%);
+      border: 2px solid #ff8a80;
+      position: absolute;
+      top: -20px;
+      left: -12px;
+      box-shadow: 0 4px 10px rgba(213, 0, 0, 0.7), inset 0 2px 3px rgba(255, 255, 255, 0.6);
+    }
+
+    .lever-assembly.pulled .lever-stem {
+      transform: rotate(65deg) scaleY(0.7);
+    }
+
+    .instruction-note {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .instruction-note span {
+      color: var(--gold-2);
+      font-weight: 700;
+    }
+
+    /* Result Card / Challenge Summary */
+    .challenge-card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 2px solid rgba(255, 215, 0, 0.35);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 215, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .challenge-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .challenge-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .challenge-title-group h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #fff 0%, var(--gold-1) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .challenge-title-group p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .card-action-btns {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .btn-reset {
+      background: linear-gradient(135deg, #ff9100 0%, #ff6d00 100%);
+      border: none;
+      color: #000;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(255, 109, 0, 0.4);
+    }
+
+    .btn-reset:hover {
+      filter: brightness(1.15);
+      background: linear-gradient(135deg, #ffa726 0%, #ff6d00 100%);
+    }
+
+    /* Challenge Sections */
+    .challenge-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .detail-box {
+      background: rgba(12, 8, 22, 0.7);
+      border-radius: 14px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .detail-box.box-tema {
+      border-top: 3px solid var(--neon-cyan);
+    }
+
+    .detail-box.box-audiencia {
+      border-top: 3px solid var(--neon-magenta);
+    }
+
+    .detail-box.box-estructura {
+      border-top: 3px solid var(--neon-amber);
+    }
+
+    .detail-header {
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .box-tema .detail-header { color: var(--neon-cyan); }
+    .box-audiencia .detail-header { color: var(--neon-magenta); }
+    .box-estructura .detail-header { color: var(--neon-amber); }
+
+    .detail-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.35;
+    }
+
+    .detail-body {
+      font-size: 0.88rem;
+      color: #c4c4dc;
+      line-height: 1.5;
+    }
+
+    .detail-example {
+      margin-top: 6px;
+      padding: 8px 10px;
+      background: rgba(255, 179, 0, 0.08);
+      border-left: 2px solid var(--gold-2);
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: #ffe082;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    /* Impromptu Practice Timer Widget */
+    .practice-widget {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 12px 18px;
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .practice-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .timer-icon {
+      font-size: 1.5rem;
+    }
+
+    .timer-readout {
+      font-family: 'Chakra Petch', monospace;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      letter-spacing: 2px;
+      min-width: 65px;
+    }
+
+    .timer-btn-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* Modal for View All Options */
+    .data-viewer-toggle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      border: none;
+      margin-top: 10px;
+      transition: color 0.2s;
+    }
+
+    .data-viewer-toggle:hover {
+      color: var(--gold-1);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #170f26;
+      border: 2px solid var(--gold-2);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 800px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 12px;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-tab-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-tab-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+    }
+
+    .modal-tab-btn.active {
+      background: var(--gold-2);
+      color: #000;
+      border-color: var(--gold-1);
+    }
+
+    .modal-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .modal-item-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 860px) {
+      .lever-assembly {
+        display: none; /* Hide mechanical lever on small screens, big button is main */
+      }
+      .marquee-title {
+        font-size: 1.6rem;
+      }
+      .reels-grid {
+        gap: 8px;
+      }
+      :root {
+        --reel-h: 210px;
+      }
+      .challenge-detail-grid {
+        grid-template-columns: 1fr;
+      }
+      .arcade-btn {
+        padding: 16px 36px;
+        font-size: 1.15rem;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .cabinet {
+        padding: 16px 14px 24px 14px;
+      }
+      .marquee-title {
+        font-size: 1.25rem;
+        letter-spacing: 2px;
+      }
+      .marquee-subtitle {
+        font-size: 0.72rem;
+      }
+      .item-main-text {
+        font-size: 0.88rem;
+        line-height: 1.25;
+      }
+      .hud-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Top info bar -->
+    <header class="top-bar">
+      <div class="badge-subtle">
+        <span class="dot"></span>
+        <span>Think Faster, Talk Smarter</span>
+      </div>
+      <button class="sound-toggle-btn" id="soundToggle" aria-label="Alternar sonido">
+        <span id="soundIcon">🔊</span>
+        <span id="soundText">Sonido: ON</span>
+      </button>
+    </header>
+
+    <!-- Slot Machine Cabinet -->
+    <main class="cabinet-wrapper">
+      <div class="cabinet">
+        <!-- Marquee Signboard -->
+        <div class="marquee">
+          <div class="chase-lights"></div>
+          <h1 class="marquee-title">
+            <span class="star">★</span>
+            Ruleta de Estructuras
+            <span class="star">★</span>
+          </h1>
+          <div class="marquee-subtitle">Improvisación &amp; Comunicación Espontánea</div>
+        </div>
+
+        <!-- HUD: Status LED and Token Counter -->
+        <div class="hud-bar">
+          <div class="hud-message-box">
+            <span style="font-size: 1.2rem;">🎰</span>
+            <div class="led-screen" id="ledStatus">¡HAZ TU 1ª TIRADA! (3 DISPONIBLES)</div>
+          </div>
+          <div class="spins-counter-group">
+            <span class="spins-label">Tiradas Restantes:</span>
+            <div class="tokens-display" id="tokensContainer" title="Monedas disponibles">
+              <div class="token-coin" id="coin1"></div>
+              <div class="token-coin" id="coin2"></div>
+              <div class="token-coin" id="coin3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slot Reels Stage -->
+        <div class="reels-stage">
+          <div class="payline-marker">
+            <div class="payline-arrow left"></div>
+            <div class="payline-line"></div>
+            <div class="payline-arrow right"></div>
+          </div>
+
+          <div class="reels-grid">
+            <!-- REEL 1: TEMA -->
+            <div class="reel-column reel-col-tema">
+              <div class="reel-header">
+                <span>💡</span> Tema
+              </div>
+              <div class="reel-window" id="windowTema">
+                <div class="reel-track" id="trackTema"></div>
+              </div>
+            </div>
+
+            <!-- REEL 2: AUDIENCIA -->
+            <div class="reel-column reel-col-audiencia">
+              <div class="reel-header">
+                <span>👥</span> Audiencia
+              </div>
+              <div class="reel-window" id="windowAudiencia">
+                <div class="reel-track" id="trackAudiencia"></div>
+              </div>
+            </div>
+
+            <!-- REEL 3: ESTRUCTURA -->
+            <div class="reel-column reel-col-estructura">
+              <div class="reel-header">
+                <span>📐</span> Estructura
+              </div>
+              <div class="reel-window" id="windowEstructura">
+                <div class="reel-track" id="trackEstructura"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Push Controls & Action Row -->
+        <div class="controls-panel">
+          <div class="spin-action-row">
+            <button class="arcade-btn" id="spinBtn">
+              <span class="btn-icon">⚡</span>
+              <span id="spinBtnText">¡GIRAR RULETA!</span>
+            </button>
+
+            <!-- Physical Mechanical Lever on the right side -->
+            <div class="lever-assembly" id="leverAssembly" title="¡Tira de la palanca!">
+              <div class="lever-stem" id="leverStem">
+                <div class="lever-knob"></div>
+              </div>
+              <div class="lever-base"></div>
+            </div>
+          </div>
+
+          <div class="instruction-note">
+            <span>Regla de juego:</span> Dispones de un máximo de 3 tiradas para afinar tu combinación.
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Challenge Result Section (Revealed/Updated after spin) -->
+    <section class="challenge-card" id="challengeCard">
+      <div class="challenge-card-header">
+        <div class="challenge-title-group">
+          <h2 id="challengeHeaderTitle">🎯 Tu Desafío de Comunicación</h2>
+          <p id="challengeHeaderSub">Prepara tu intervención aplicando la estructura asignada a tu audiencia y tema.</p>
+        </div>
+        <div class="card-action-btns">
+          <button class="btn-secondary" id="copyBtn" title="Copiar desafío al portapapeles">
+            📋 Copiar Desafío
+          </button>
+          <button class="btn-secondary btn-reset" id="resetBtn" title="Comenzar una nueva ronda con 3 tiradas">
+            🔄 Nueva Partida (3 Tiradas)
+          </button>
+        </div>
+      </div>
+
+      <div class="challenge-detail-grid">
+        <!-- Detail Tema -->
+        <div class="detail-box box-tema">
+          <div class="detail-header">
+            <span>💡</span> Tema Asignado
+          </div>
+          <div class="detail-title" id="cardTemaText">-</div>
+        </div>
+
+        <!-- Detail Audiencia -->
+        <div class="detail-box box-audiencia">
+          <div class="detail-header">
+            <span>👥</span> Audiencia Objetivo
+          </div>
+          <div class="detail-title" id="cardAudienciaTitle">-</div>
+          <div class="detail-body" id="cardAudienciaDetail"></div>
+        </div>
+
+        <!-- Detail Estructura -->
+        <div class="detail-box box-estructura">
+          <div class="detail-header">
+            <span>📐</span> Estructura Retórica
+          </div>
+          <div class="detail-title" id="cardEstructuraTitle">-</div>
+          <div class="detail-body" id="cardEstructuraDesc"></div>
+          <div class="detail-example" id="cardEstructuraEjemplo"></div>
+        </div>
+      </div>
+
+      <!-- Practice Impromptu Pitch Timer -->
+      <div class="practice-widget">
+        <div class="practice-info">
+          <span class="timer-icon">⏱️</span>
+          <div>
+            <strong>Temporizador de improvisación:</strong>
+            <span style="font-size: 0.85rem; color: var(--text-muted); margin-left: 6px;">(1 o 2 minutos para hablar)</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div class="timer-readout" id="timerDisplay">01:00</div>
+          <div class="timer-btn-group">
+            <button class="btn-secondary" id="timerStartBtn">▶ Iniciar</button>
+            <button class="btn-secondary" id="timerResetBtn">↺ 1m / 2m</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <button class="data-viewer-toggle" id="openModalBtn">
+      Ver lista completa de temas, audiencias y estructuras disponibles (3)
+    </button>
+  </div>
+
+  <!-- Modal for browsing raw preloaded contents -->
+  <div class="modal-backdrop" id="dataModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Explorar Contenidos Precargados</h3>
+        <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+      </div>
+      <div class="modal-tab-btns">
+        <button class="modal-tab-btn active" data-tab="temas">Temas (20)</button>
+        <button class="modal-tab-btn" data-tab="audiencias">Audiencias (14)</button>
+        <button class="modal-tab-btn" data-tab="estructuras">Estructuras (14)</button>
+      </div>
+      <div class="modal-list-container" id="modalList"></div>
+    </div>
+  </div>
+
+  <script>
+    /* =====================================================================
+       PRELOADED DATA (from temas.txt, audiencias.txt, estructuras.txt)
+       ===================================================================== */
+    const DATA = {
+      temas: [
+        "Un robot que asiste a clase por ti, pero levanta la mano para contar tus secretos.",
+        "Una almohada que transmite conocimientos mientras duermes, exclusivamente mediante anuncios.",
+        "Un despertador que solo se apaga cuando lo convences de que necesitas dormir más.",
+        "Un servicio de alquiler de excusas, con garantía de credibilidad y devolución si no funcionan.",
+        "Una mochila que sale corriendo hacia el aula cuando detecta que vas a llegar tarde.",
+        "Un traductor que convierte los maullidos de los gatos en críticas sobre sus dueños.",
+        "Un supermercado donde los productos compiten por convencerte de que los compres.",
+        "Una aplicación que convierte cada queja en una tarea que debes resolver personalmente.",
+        "Un ascensor que decide la planta de destino según tu estado de ánimo.",
+        "Un paraguas que te sigue a todas partes, pero se niega a salir cuando llueve.",
+        "Un gimnasio donde puedes contratar a alguien para que haga ejercicio en tu lugar.",
+        "Una nevera que exige una contraseña diferente cada vez que quieres picar entre horas.",
+        "Un sistema que convierte los bostezos del alumnado en electricidad para el campus.",
+        "Un bolígrafo que cobra una comisión cada vez que escribes una respuesta correcta.",
+        "Una universidad donde las notas las ponen los estudiantes y los exámenes los hace el profesorado.",
+        "Un servicio de reparto a domicilio que entrega las cosas donde vas a estar mañana.",
+        "Un casco que muestra sobre tu cabeza subtítulos con lo que estás pensando.",
+        "Una impresora que solo funciona cuando recibe un cumplido sincero.",
+        "Un sistema de transporte público basado en toboganes gigantes.",
+        "Una suscripción que permite cambiar de gravedad durante una hora al día."
+      ],
+      audiencias: [
+        {
+          titulo: "Público de una feria local",
+          detalle: "Personas de distintas edades e intereses que pasan por tu puesto y disponen de poco tiempo; necesitan entender enseguida qué propones y para qué les serviría."
+        },
+        {
+          titulo: "Niños y niñas de entre 8 y 10 años",
+          detalle: "Un grupo que quiere descubrir cómo funciona tu propuesta mediante ejemplos cercanos y situaciones que pueda imaginar."
+        },
+        {
+          titulo: "Adolescentes de entre 14 y 17 años",
+          detalle: "Un grupo interesado en el ocio, las amistades y la autonomía, que quiere saber cómo encajaría tu propuesta en su vida cotidiana."
+        },
+        {
+          titulo: "Familias con hijos pequeños",
+          detalle: "Personas que buscan organizar sus rutinas y valoran el tiempo, la seguridad y el coste de lo que les presentas."
+        },
+        {
+          titulo: "Un grupo de personas jubiladas",
+          detalle: "Personas con experiencias y conocimientos diversos que quieren valorar si tu propuesta les resulta útil para sus actividades, aficiones o relaciones."
+        },
+        {
+          titulo: "Propietarios de pequeños comercios",
+          detalle: "Personas que necesitan saber cuánto cuesta tu propuesta, qué esfuerzo requiere ponerla en marcha y cómo puede ayudar a su negocio."
+        },
+        {
+          titulo: "Representantes de un ayuntamiento",
+          detalle: "Un grupo que debe decidir si tu propuesta beneficia a la población, es accesible y justifica el uso de recursos públicos."
+        },
+        {
+          titulo: "Turistas que visitan una ciudad por primera vez",
+          detalle: "Personas que desconocen el entorno y buscan orientarse, aprovechar su estancia y evitar complicaciones."
+        },
+        {
+          titulo: "Periodistas de un medio local",
+          detalle: "Profesionales que necesitan identificar qué tiene de novedosa tu propuesta, a quién afecta y qué datos o ejemplos respaldan lo que afirmas."
+        },
+        {
+          titulo: "Trabajadores de una empresa ajena al sector tecnológico",
+          detalle: "Personas que quieren entender cómo afectará tu propuesta a sus tareas diarias, cuánto tendrán que aprender y qué ventajas concretas les aportará."
+        },
+        {
+          titulo: "El rectorado de una universidad",
+          detalle: "Personas que buscan mejorar el campus con un presupuesto limitado y alta viabilidad institucional."
+        },
+        {
+          titulo: "Estudiantes de primero de carrera",
+          detalle: "Alumnado que busca ahorrar tiempo y dinero mientras se adapta a las exigencias universitarias."
+        },
+        {
+          titulo: "Profesorado universitario",
+          detalle: "Docentes preocupados por el aprendizaje real, la atención y la participación activa en el aula."
+        },
+        {
+          titulo: "Un grupo de inversores",
+          detalle: "Perfil analítico y orientado a negocio que quiere saber quién pagaría por la propuesta y cuál es su retorno."
+        }
+      ],
+      estructuras: [
+        {
+          numero: "1",
+          titulo: "Qué → Por qué importa → Y ahora qué (What–So What–Now What)",
+          descripcion: "Presentar el tema, idea o situación; explicar por qué resulta relevante para la audiencia; y terminar indicando cómo aplicar esa información o qué hacer a continuación. Es una estructura versátil para explicar ideas y orientar hacia la acción.",
+          ejemplo: "«CampusClaro reúne tus tareas y fechas de entrega en una app; así puedes organizarte sin consultar cinco plataformas distintas; añade ahora tus asignaturas y crea tu primer recordatorio.»"
+        },
+        {
+          numero: "2",
+          titulo: "PREP: Idea → Razón → Ejemplo → Idea (Point–Reason–Example–Point)",
+          descripcion: "Expresar una afirmación o postura; justificarla mediante una razón; ilustrarla con un ejemplo concreto; y cerrar retomando el mensaje inicial. Resulta especialmente útil para responder preguntas de opinión y defender una posición.",
+          ejemplo: "«CampusClaro debería ser nuestra agenda de clase; reunir las entregas en un único lugar facilita la planificación; por ejemplo, si coinciden dos prácticas el viernes, la app te propone repartir el trabajo desde el lunes; por eso propongo que usemos CampusClaro como agenda común.»"
+        },
+        {
+          numero: "3",
+          titulo: "Problema → Solución → Beneficio (Problem–Solution–Benefit)",
+          descripcion: "Identificar una dificultad o necesidad relevante para el público; presentar una propuesta que permita resolverla; y explicar qué ventajas se obtendrían al adoptarla. Es apropiada para persuadir, proponer mejoras o presentar proyectos.",
+          ejemplo: "«Las fechas de entrega están repartidas entre correos, chats y plataformas; CampusClaro las reúne en un calendario con recordatorios; así podrás planificar la semana y entregar tus trabajos a tiempo.»"
+        },
+        {
+          numero: "4",
+          titulo: "Comparación → Contraste → Conclusión (Comparison–Contrast–Conclusion)",
+          descripcion: "Señalar las semejanzas entre dos opciones, experiencias o ideas; explicar sus diferencias; y extraer una valoración o decisión fundamentada en esa comparación. Permite organizar el análisis de alternativas.",
+          ejemplo: "«Tanto una agenda de papel como CampusClaro permiten anotar entregas; la app añade avisos automáticos y permite compartir tareas con tu equipo; por eso CampusClaro resulta más adecuada cuando necesitas coordinar un trabajo en grupo.»"
+        },
+        {
+          numero: "5",
+          titulo: "STAR: Situación → Tarea → Acción → Resultado (Situation–Task–Action–Result)",
+          descripcion: "Describir el contexto de una experiencia; explicar el objetivo o reto que había que afrontar; detallar qué se hizo para abordarlo; y mostrar los resultados obtenidos. Es útil para relatar experiencias y demostrar capacidades mediante hechos concretos.",
+          ejemplo: "«En nuestro grupo se nos pasaban las fechas de entrega; necesitábamos coordinar cinco asignaturas sin olvidos; desarrollamos CampusClaro y cargamos las tareas en su calendario compartido; durante la prueba de un mes entregamos todos los trabajos dentro de plazo.»"
+        },
+        {
+          numero: "6",
+          titulo: "Pasado → Presente → Futuro (Past–Present–Future)",
+          descripcion: "Explicar los antecedentes o cómo eran las cosas; describir la situación actual; y plantear qué se espera, qué se propone o hacia dónde se avanza. Es una estructura cronológica para presentar la evolución de un tema, proyecto o situación.",
+          ejemplo: "«Antes apuntábamos las entregas en papeles y mensajes sueltos; hoy CampusClaro las organiza en un calendario compartido; el próximo semestre incorporaremos la reserva de sesiones de estudio en grupo.»"
+        },
+        {
+          numero: "7",
+          titulo: "WHAT: Motivo → Vínculo → Anécdotas → Agradecimiento",
+          descripcion: "Explicar por qué se celebra el encuentro (Why); aclarar la relación de quien habla con la persona, grupo o acontecimiento (How); compartir anécdotas o aprendizajes significativos (Anecdotes); y cerrar con agradecimientos y buenos deseos (Thank). Está pensada para homenajes, brindis y presentaciones de otras personas.",
+          ejemplo: "«Hoy celebramos el lanzamiento de CampusClaro; soy parte del equipo de estudiantes que la ha desarrollado; cuando una compañera detectó que habíamos olvidado una entrega, aprendimos que necesitábamos una agenda común y empezamos a crearla; gracias a quienes la habéis probado y ayudado a mejorar, y ojalá os acompañe durante toda la carrera.»"
+        },
+        {
+          numero: "8",
+          titulo: "ADD: Respuesta → Ejemplo → Valor (Answer–Detail–Describe)",
+          descripcion: "Contestar directamente a la pregunta con una frase clara; aportar un ejemplo o evidencia concreta que respalde la respuesta; y explicar por qué resulta relevante o útil para quien pregunta. Está pensada para entrevistas y situaciones de preguntas y respuestas.",
+          ejemplo: "«Sí, CampusClaro permite coordinar trabajos en grupo; por ejemplo, cada integrante puede marcar su parte como terminada y el resto recibe un aviso; así sabréis qué falta sin tener que preguntar continuamente en el chat.»"
+        },
+        {
+          numero: "9",
+          titulo: "Las cuatro íes: Información → Impacto → Invitación → Implicaciones",
+          descripcion: "Describir hechos observables; explicar cómo afectan y qué preocupación generan; proponer una acción o colaboración para mejorar; y exponer las consecuencias de adoptar o no el cambio. Permite ofrecer feedback de forma clara y constructiva.",
+          ejemplo: "«En la prueba de CampusClaro, cuatro de seis estudiantes no encontraron el botón para añadir tareas; me preocupa que esa dificultad les impida aprovechar la app; os propongo que probemos juntos una pantalla inicial más sencilla; si facilita el primer uso, podremos presentar CampusClaro a toda la clase con mayor confianza.»"
+        },
+        {
+          numero: "10",
+          titulo: "AAA: Reconocer → Comprender el impacto → Reparar (Acknowledge–Appreciate–Amends)",
+          descripcion: "Identificar la conducta y asumir la responsabilidad; mostrar que se comprende cómo ha afectado a otras personas; y concretar qué se hará para remediar la situación o evitar que se repita. Es una estructura para formular disculpas.",
+          ejemplo: "«Publicamos CampusClaro sin comprobar correctamente las notificaciones y os pido disculpas; entiendo que confiar en esos avisos y no recibirlos os ha hecho perder tiempo y olvidar entregas; antes de reactivar la función corregiremos el fallo y verificaremos los avisos en los dispositivos afectados.»"
+        },
+        {
+          numero: "11",
+          titulo: "«¿Y si pudieras…?» → «De modo que…» → «Por ejemplo…» → «Y además…»",
+          descripcion: "Presentar una posibilidad atractiva; explicar el beneficio que aportaría; mostrar un ejemplo concreto que la haga creíble; y añadir una ventaja adicional. Está pensada para presentar iniciativas empresariales y conseguir apoyo.",
+          ejemplo: "«¿Y si pudieras organizar todas tus entregas con CampusClaro, de modo que cada mañana supieras por dónde empezar, por ejemplo viendo juntas la práctica del jueves y la exposición del viernes, y además pudieras repartir las tareas con tu equipo desde la misma app?»"
+        },
+        {
+          numero: "12",
+          titulo: "Columna vertebral del relato (Story Spine)",
+          descripcion: "«Érase una vez…» presenta los personajes y el contexto; «Cada día…» establece la normalidad; «Pero un día…» introduce un acontecimiento que la altera; «A causa de ello…» encadena consecuencias y puede repetirse; «Hasta que finalmente…» resuelve el conflicto; y «Desde entonces…» muestra el cambio producido. Plantilla para practicar improvisación narrativa.",
+          ejemplo: "«Érase una vez una estudiante llamada Ana; cada día buscaba sus entregas entre correos y chats; pero un día descubrió una práctica cuando el plazo ya había terminado; a causa de ello reunió a sus compañeros para crear CampusClaro...»"
+        },
+        {
+          numero: "13",
+          titulo: "ABDCE: Acción → Antecedentes → Desarrollo → Clímax → Desenlace",
+          descripcion: "Comenzar con una acción; aportar el contexto necesario para comprenderla; desarrollar la tensión; llegar al momento decisivo; y resolver la historia. Estructura habitual de relatos dinámicos y obras literarias.",
+          ejemplo: "«Ana pulsó enviar justo cuando terminaba el plazo; llevaba semanas buscando las fechas de entrega entre correos y chats; los trabajos se acumulaban y cada nuevo aviso aumentaba su agobio; cuando estuvo a punto de olvidar otra práctica, decidió probar CampusClaro...»"
+        },
+        {
+          numero: "14",
+          titulo: "IRAC: Cuestión → Regla → Análisis → Conclusión (Issue–Rule–Analysis–Conclusion)",
+          descripcion: "Delimitar el asunto que debe resolverse; presentar la norma o criterio aplicable; analizar cómo se aplica al caso; y formular la conclusión que se deriva de ese análisis. Organización clave para argumentación estructurada y formal.",
+          ejemplo: "«Debemos comprobar si CampusClaro cumple las bases del concurso universitario de apps; esas bases exigen un prototipo funcional que resuelva una necesidad del alumnado...»"
+        }
+      ]
+    };
+
+    /* =====================================================================
+       AUDIO SYNTHESIS ENGINE (Web Audio API - No external files)
+       ===================================================================== */
+    class RetroAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      playLeverPull() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(140, now);
+        osc.frequency.exponentialRampToValueAtTime(40, now + 0.18);
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.22);
+      }
+
+      playReelTick(pitch = 380) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(pitch, now);
+        osc.frequency.exponentialRampToValueAtTime(pitch * 0.4, now + 0.03);
+        gain.gain.setValueAtTime(0.06, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.04);
+      }
+
+      playReelStop(reelIndex = 0) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const baseFreq = [180, 240, 320][reelIndex] || 250;
+        
+        // Thud
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(baseFreq, now);
+        osc.frequency.exponentialRampToValueAtTime(60, now + 0.2);
+        gain.gain.setValueAtTime(0.5, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.24);
+
+        // Metallic bell ping
+        const ping = this.ctx.createOscillator();
+        const pingGain = this.ctx.createGain();
+        ping.type = 'sine';
+        ping.frequency.setValueAtTime(baseFreq * 3.5, now);
+        pingGain.gain.setValueAtTime(0.2, now);
+        pingGain.gain.exponentialRampToValueAtTime(0.005, now + 0.25);
+        ping.connect(pingGain);
+        pingGain.connect(this.ctx.destination);
+        ping.start(now);
+        ping.stop(now + 0.26);
+      }
+
+      playJackpot() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, idx) => {
+          const now = this.ctx.currentTime + (idx * 0.11);
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.38);
+        });
+      }
+    }
+
+    const audio = new RetroAudioEngine();
+
+    /* =====================================================================
+       CONFETTI SYSTEM
+       ===================================================================== */
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let confettiParticles = [];
+    let confettiAnimationId = null;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function launchConfetti(count = 90) {
+      const colors = ['#ffd700', '#00e5ff', '#ff007f', '#ffffff', '#ff9100', '#00e676'];
+      confettiParticles = [];
+      for (let i = 0; i < count; i++) {
+        confettiParticles.push({
+          x: canvas.width / 2 + (Math.random() * 200 - 100),
+          y: canvas.height * 0.45,
+          vx: (Math.random() - 0.5) * 16,
+          vy: (Math.random() * -14) - 5,
+          size: Math.random() * 9 + 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotationSpeed: (Math.random() - 0.5) * 12,
+          opacity: 1
+        });
+      }
+
+      if (!confettiAnimationId) {
+        animateConfetti();
+      }
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = confettiParticles.length - 1; i >= 0; i--) {
+        const p = confettiParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.45; // gravity
+        p.rotation += p.rotationSpeed;
+        p.opacity -= 0.007;
+
+        if (p.opacity <= 0 || p.y > canvas.height) {
+          confettiParticles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.opacity;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        ctx.restore();
+      }
+
+      if (confettiParticles.length > 0) {
+        confettiAnimationId = requestAnimationFrame(animateConfetti);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confettiAnimationId = null;
+      }
+    }
+
+    /* =====================================================================
+       SLOT REEL CONTROLLER
+       ===================================================================== */
+    const REEL_HEIGHT = 230; // Matches CSS --reel-h
+    const MAX_SPINS = 3;
+
+    // DOM Elements
+    const spinBtn = document.getElementById('spinBtn');
+    const spinBtnText = document.getElementById('spinBtnText');
+    const leverAssembly = document.getElementById('leverAssembly');
+    const leverStem = document.getElementById('leverStem');
+    const ledStatus = document.getElementById('ledStatus');
+    const tokens = [
+      document.getElementById('coin1'),
+      document.getElementById('coin2'),
+      document.getElementById('coin3')
+    ];
+    const soundToggle = document.getElementById('soundToggle');
+    const soundIcon = document.getElementById('soundIcon');
+    const soundText = document.getElementById('soundText');
+
+    const trackTema = document.getElementById('trackTema');
+    const trackAudiencia = document.getElementById('trackAudiencia');
+    const trackEstructura = document.getElementById('trackEstructura');
+
+    const challengeCard = document.getElementById('challengeCard');
+    const challengeHeaderTitle = document.getElementById('challengeHeaderTitle');
+    const challengeHeaderSub = document.getElementById('challengeHeaderSub');
+    const cardTemaText = document.getElementById('cardTemaText');
+    const cardAudienciaTitle = document.getElementById('cardAudienciaTitle');
+    const cardAudienciaDetail = document.getElementById('cardAudienciaDetail');
+    const cardEstructuraTitle = document.getElementById('cardEstructuraTitle');
+    const cardEstructuraDesc = document.getElementById('cardEstructuraDesc');
+    const cardEstructuraEjemplo = document.getElementById('cardEstructuraEjemplo');
+    const copyBtn = document.getElementById('copyBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    // State
+    let spinsCount = 0; // Number of spins executed (0 to 3)
+    let isSpinning = false;
+    let currentSelection = {
+      tema: null,
+      audiencia: null,
+      estructura: null
+    };
+
+    // Helper to generate reel item HTML
+    function createReelCard(type, item) {
+      const el = document.createElement('div');
+      el.className = 'reel-item';
+
+      if (type === 'tema') {
+        el.innerHTML = `
+          <div class="reel-item-content">
+            <span class="item-tag" style="color: var(--neon-cyan); border: 1px solid rgba(0,229,255,0.3);">Tema</span>
+            <div class="item-main-text">${item}</div>
+          </div>
+        `;
+      } else if (type === 'audiencia') {
+        el.innerHTML = `
+          <div class="reel-item-content">
+            <span class="item-tag" style="color: var(--neon-magenta); border: 1px solid rgba(255,0,127,0.3);">Audiencia</span>
+            <div class="item-main-text">${item.titulo}</div>
+            <div class="item-sub-text">${item.detalle}</div>
+          </div>
+        `;
+      } else if (type === 'estructura') {
+        // extract short flow arrows
+        const titleParts = item.titulo.split('(');
+        const mainFlow = titleParts[0].trim();
+        const steps = mainFlow.split('→').map(s => s.trim());
+
+        const stepsHtml = steps.length > 1 && steps.length <= 5
+          ? `<div class="item-flow">${steps.map(s => `<span class="flow-step">${s}</span>`).join('')}</div>`
+          : '';
+
+        el.innerHTML = `
+          <div class="reel-item-content">
+            <span class="item-tag" style="color: var(--gold-1); border: 1px solid rgba(255,179,0,0.3);">#${item.numero} Estructura</span>
+            <div class="item-main-text">${item.titulo}</div>
+            ${stepsHtml}
+          </div>
+        `;
+      }
+      return el;
+    }
+
+    // Initialize initial static reel cards
+    function setupInitialReels() {
+      // Pick initial preview (first items)
+      currentSelection.tema = DATA.temas[0];
+      currentSelection.audiencia = DATA.audiencias[0];
+      currentSelection.estructura = DATA.estructuras[0];
+
+      trackTema.innerHTML = '';
+      trackAudiencia.innerHTML = '';
+      trackEstructura.innerHTML = '';
+
+      trackTema.appendChild(createReelCard('tema', currentSelection.tema));
+      trackAudiencia.appendChild(createReelCard('audiencia', currentSelection.audiencia));
+      trackEstructura.appendChild(createReelCard('estructura', currentSelection.estructura));
+
+      trackTema.style.transform = 'translateY(0px)';
+      trackAudiencia.style.transform = 'translateY(0px)';
+      trackEstructura.style.transform = 'translateY(0px)';
+    }
+
+    // Sound toggle handler
+    soundToggle.addEventListener('click', () => {
+      audio.enabled = !audio.enabled;
+      if (audio.enabled) {
+        soundIcon.textContent = '🔊';
+        soundText.textContent = 'Sonido: ON';
+        audio.init();
+        audio.playReelStop(0);
+      } else {
+        soundIcon.textContent = '🔇';
+        soundText.textContent = 'Sonido: OFF';
+      }
+    });
+
+    // Helper for random items
+    function getRandomItem(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    // Build spinning strip for a reel and animate it to target item
+    function spinReel(trackEl, type, array, targetItem, durationMs, reelIndex) {
+      return new Promise(resolve => {
+        const TOTAL_ITEMS = 28 + Math.floor(Math.random() * 8);
+        const fragment = document.createDocumentFragment();
+
+        // Include current item first so transition is seamless
+        const firstItem = currentSelection[type] || getRandomItem(array);
+        fragment.appendChild(createReelCard(type, firstItem));
+
+        // Fill intermediate random items
+        for (let i = 1; i < TOTAL_ITEMS; i++) {
+          fragment.appendChild(createReelCard(type, getRandomItem(array)));
+        }
+
+        // Final item at the end of the strip
+        fragment.appendChild(createReelCard(type, targetItem));
+
+        // Update DOM
+        trackEl.innerHTML = '';
+        trackEl.appendChild(fragment);
+
+        // Reset position
+        trackEl.style.transition = 'none';
+        trackEl.style.transform = 'translateY(0px)';
+        trackEl.classList.add('spinning-blur');
+
+        // Force reflow
+        trackEl.offsetHeight;
+
+        // Sound ticker interval
+        let tickInterval = setInterval(() => {
+          audio.playReelTick(300 + reelIndex * 90);
+        }, 110);
+
+        // Animate
+        const finalTranslateY = -(TOTAL_ITEMS * REEL_HEIGHT);
+        trackEl.style.transition = `transform ${durationMs}ms cubic-bezier(0.12, 0.95, 0.18, 1.05)`;
+        trackEl.style.transform = `translateY(${finalTranslateY}px)`;
+
+        // Decelerate sound tick frequency near end
+        setTimeout(() => {
+          clearInterval(tickInterval);
+          tickInterval = setInterval(() => {
+            audio.playReelTick(280 + reelIndex * 80);
+          }, 240);
+        }, durationMs * 0.7);
+
+        // On complete
+        setTimeout(() => {
+          clearInterval(tickInterval);
+          trackEl.classList.remove('spinning-blur');
+          audio.playReelStop(reelIndex);
+
+          // Settle DOM to just the winning card to prevent huge DOM tree
+          setTimeout(() => {
+            trackEl.style.transition = 'none';
+            trackEl.innerHTML = '';
+            trackEl.appendChild(createReelCard(type, targetItem));
+            trackEl.style.transform = 'translateY(0px)';
+            resolve();
+          }, 350);
+
+        }, durationMs);
+      });
+    }
+
+    // Execute Spin logic
+    async function triggerSpin() {
+      if (isSpinning || spinsCount >= MAX_SPINS) return;
+
+      audio.init();
+      audio.playLeverPull();
+
+      isSpinning = true;
+      spinsCount++;
+
+      // Animate lever pull
+      leverAssembly.classList.add('pulled');
+      spinBtn.classList.add('is-pressed');
+      setTimeout(() => {
+        leverAssembly.classList.remove('pulled');
+        spinBtn.classList.remove('is-pressed');
+      }, 350);
+
+      // Update tokens display
+      const remainingSpins = MAX_SPINS - spinsCount;
+      tokens[spinsCount - 1].classList.add('spent');
+
+      // Update LED status
+      ledStatus.textContent = `TIRADA ${spinsCount} DE ${MAX_SPINS} EN CURSO...`;
+      spinBtn.disabled = true;
+
+      // Pick random winners
+      const pickedTema = getRandomItem(DATA.temas);
+      const pickedAudiencia = getRandomItem(DATA.audiencias);
+      const pickedEstructura = getRandomItem(DATA.estructuras);
+
+      // Spin timings (staggered for classic slot thrill)
+      const p1 = spinReel(trackTema, 'tema', DATA.temas, pickedTema, 1900, 0);
+      const p2 = spinReel(trackAudiencia, 'audiencia', DATA.audiencias, pickedAudiencia, 2600, 1);
+      const p3 = spinReel(trackEstructura, 'estructura', DATA.estructuras, pickedEstructura, 3300, 2);
+
+      await Promise.all([p1, p2, p3]);
+
+      // Save selection
+      currentSelection.tema = pickedTema;
+      currentSelection.audiencia = pickedAudiencia;
+      currentSelection.estructura = pickedEstructura;
+
+      // Update challenge card
+      updateChallengeCard();
+
+      isSpinning = false;
+
+      if (remainingSpins > 0) {
+        ledStatus.textContent = `TIRADA ${spinsCount} COMPLETADA • QUEDAN ${remainingSpins} TIRADA${remainingSpins > 1 ? 'S' : ''}`;
+        spinBtnText.textContent = `¡GIRAR DE NUEVO! (${remainingSpins} RESTANTE${remainingSpins > 1 ? 'S' : ''})`;
+        spinBtn.disabled = false;
+      } else {
+        // Final 3rd spin used!
+        ledStatus.textContent = `¡3ª TIRADA COMPLETADA! COMBINACIÓN DEFINITIVA`;
+        spinBtnText.textContent = `SIN TIRADAS (3 DE 3 USADAS)`;
+        spinBtn.disabled = true;
+        audio.playJackpot();
+        launchConfetti(120);
+        challengeHeaderTitle.innerHTML = `🏆 ¡Combinación Final Fijada! (3/3)`;
+        challengeHeaderSub.textContent = `Has alcanzado el límite de 3 tiradas. ¡Es hora de preparar tu discurso con esta combinación!`;
+      }
+    }
+
+    // Update bottom challenge display card
+    function updateChallengeCard() {
+      cardTemaText.textContent = currentSelection.tema;
+      cardAudienciaTitle.textContent = currentSelection.audiencia.titulo;
+      cardAudienciaDetail.textContent = currentSelection.audiencia.detalle;
+      cardEstructuraTitle.textContent = currentSelection.estructura.titulo;
+      cardEstructuraDesc.textContent = currentSelection.estructura.descripcion;
+      cardEstructuraEjemplo.textContent = currentSelection.estructura.ejemplo;
+
+      challengeCard.classList.add('visible');
+
+      // Smooth scroll if needed on mobile
+      if (window.innerWidth < 768) {
+        challengeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    // Reset machine for a new round
+    function resetMachine() {
+      spinsCount = 0;
+      tokens.forEach(coin => coin.classList.remove('spent'));
+      ledStatus.textContent = `¡NUEVA PARTIDA! (3 TIRADAS DISPONIBLES)`;
+      spinBtnText.textContent = `¡GIRAR RULETA!`;
+      spinBtn.disabled = false;
+      challengeHeaderTitle.innerHTML = `🎯 Tu Desafío de Comunicación`;
+      challengeHeaderSub.textContent = `Prepara tu intervención aplicando la estructura asignada a tu audiencia y tema.`;
+      audio.init();
+      audio.playReelStop(0);
+    }
+
+    // Copy to clipboard
+    copyBtn.addEventListener('click', async () => {
+      if (!currentSelection.tema) return;
+      const textToCopy = 
+`🎯 DESAFÍO DE IMPROVISACIÓN (Think Faster, Talk Smarter)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 TEMA:
+${currentSelection.tema}
+
+👥 AUDIENCIA:
+${currentSelection.audiencia.titulo}
+(${currentSelection.audiencia.detalle})
+
+📐 ESTRUCTURA:
+${currentSelection.estructura.titulo}
+${currentSelection.estructura.descripcion}
+${currentSelection.estructura.ejemplo}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = `✅ ¡Copiado al Portapapeles!`;
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+        }, 2200);
+      } catch (err) {
+        alert('No se pudo copiar automáticamente. Por favor selecciónalo manualmente.');
+      }
+    });
+
+    // Reset button
+    resetBtn.addEventListener('click', () => {
+      resetMachine();
+    });
+
+    // Button and Lever click events
+    spinBtn.addEventListener('click', triggerSpin);
+    leverAssembly.addEventListener('click', triggerSpin);
+
+    // Keyboard shortcut (Spacebar or Enter to spin)
+    window.addEventListener('keydown', (e) => {
+      if ((e.code === 'Space' || e.code === 'Enter') && !e.target.matches('button, input, textarea')) {
+        e.preventDefault();
+        triggerSpin();
+      }
+    });
+
+    /* =====================================================================
+       IMPROMPTU SPEECH TIMER
+       ===================================================================== */
+    let timerDuration = 60; // 60s default
+    let timerRemaining = 60;
+    let timerInterval = null;
+    let timerRunning = false;
+
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timerStartBtn = document.getElementById('timerStartBtn');
+    const timerResetBtn = document.getElementById('timerResetBtn');
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function updateTimerDisplay() {
+      timerDisplay.textContent = formatTime(timerRemaining);
+      if (timerRemaining <= 10 && timerRemaining > 0) {
+        timerDisplay.style.color = '#ff3366';
+      } else {
+        timerDisplay.style.color = 'var(--neon-cyan)';
+      }
+    }
+
+    timerStartBtn.addEventListener('click', () => {
+      if (!timerRunning) {
+        audio.init();
+        timerRunning = true;
+        timerStartBtn.textContent = '⏸ Pausar';
+        timerInterval = setInterval(() => {
+          timerRemaining--;
+          updateTimerDisplay();
+          if (timerRemaining <= 0) {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerStartBtn.textContent = '▶ Iniciar';
+            audio.playJackpot();
+            alert('⏰ ¡Tiempo cumplido! Fin de la intervención.');
+          }
+        }, 1000);
+      } else {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerStartBtn.textContent = '▶ Reanudar';
+      }
+    });
+
+    timerResetBtn.addEventListener('click', () => {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      timerStartBtn.textContent = '▶ Iniciar';
+      // Toggle between 1 min (60s) and 2 min (120s)
+      timerDuration = timerDuration === 60 ? 120 : 60;
+      timerRemaining = timerDuration;
+      updateTimerDisplay();
+    });
+
+    /* =====================================================================
+       RAW DATA VIEWER MODAL
+       ===================================================================== */
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const dataModal = document.getElementById('dataModal');
+    const modalList = document.getElementById('modalList');
+    const modalTabs = document.querySelectorAll('.modal-tab-btn');
+    let activeModalTab = 'temas';
+
+    function renderModalContent() {
+      modalList.innerHTML = '';
+      if (activeModalTab === 'temas') {
+        DATA.temas.forEach((tema, idx) => {
+          const div = document.createElement('div');
+          div.className = 'modal-item-card';
+          div.innerHTML = `<strong>${idx + 1}.</strong> ${tema}`;
+          modalList.appendChild(div);
+        });
+      } else if (activeModalTab === 'audiencias') {
+        DATA.audiencias.forEach((aud, idx) => {
+          const div = document.createElement('div');
+          div.className = 'modal-item-card';
+          div.innerHTML = `<strong>${idx + 1}. ${aud.titulo}</strong><br><span style="color: #bbb;">${aud.detalle}</span>`;
+          modalList.appendChild(div);
+        });
+      } else if (activeModalTab === 'estructuras') {
+        DATA.estructuras.forEach(est => {
+          const div = document.createElement('div');
+          div.className = 'modal-item-card';
+          div.innerHTML = `<strong>#${est.numero} ${est.titulo}</strong><br><span style="color: #bbb;">${est.descripcion}</span><br><em style="color: #ffe082; font-size: 0.8rem;">${est.ejemplo}</em>`;
+          modalList.appendChild(div);
+        });
+      }
+    }
+
+    openModalBtn.addEventListener('click', () => {
+      renderModalContent();
+      dataModal.classList.add('open');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      dataModal.classList.remove('open');
+    });
+
+    dataModal.addEventListener('click', (e) => {
+      if (e.target === dataModal) {
+        dataModal.classList.remove('open');
+      }
+    });
+
+    modalTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        modalTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        activeModalTab = tab.getAttribute('data-tab');
+        renderModalContent();
+      });
+    });
+
+    // Initial setup on load
+    setupInitialReels();
+  </script>
+</body>
+</html>
